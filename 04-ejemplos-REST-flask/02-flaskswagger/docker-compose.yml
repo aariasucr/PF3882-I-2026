@@ -1,0 +1,7 @@
+services:
+  flask-api-flasgger:
+    build: .
+    container_name: 02-flaskswagger
+    ports:
+      - "4545:5000"
+    restart: always
