@@ -1,0 +1,7 @@
+services:
+  flask-api:
+    build: .
+    container_name: 01-flaskintro
+    ports:
+      - "4545:5000"
+    restart: always
