@@ -1,0 +1,7 @@
+services:
+  flask-api:
+    build: .
+    container_name: 04-flaskblueprints
+    ports:
+      - "1234:5000"
+    restart: always
