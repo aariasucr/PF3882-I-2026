@@ -1,0 +1,14 @@
+summary: Elimina un libro
+tags:
+  - Books
+parameters:
+  - name: book_id
+    in: path
+    type: integer
+    required: true
+    description: ID del libro
+responses:
+  200:
+    description: Libro eliminado
+  404:
+    description: Libro no encontrado

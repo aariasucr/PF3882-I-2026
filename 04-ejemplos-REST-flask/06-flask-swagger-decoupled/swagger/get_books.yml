@@ -1,0 +1,10 @@
+summary: Obtiene todos los libros
+tags:
+  - Books
+responses:
+  200:
+    description: Lista de libros
+    schema:
+      type: array
+      items:
+        $ref: "#/definitions/Book"

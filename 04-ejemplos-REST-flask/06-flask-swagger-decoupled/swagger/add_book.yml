@@ -1,0 +1,14 @@
+summary: Agrega un libro
+tags:
+  - Books
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      $ref: "#/definitions/Book"
+responses:
+  201:
+    description: Libro agregado
+  400:
+    description: Faltan datos

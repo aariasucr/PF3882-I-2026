@@ -1,0 +1,21 @@
+summary: Actualiza un libro
+tags:
+  - Books
+parameters:
+  - name: book_id
+    in: path
+    type: integer
+    required: true
+    description: ID del libro
+  - name: body
+    in: body
+    required: true
+    schema:
+      $ref: "#/definitions/Book"
+responses:
+  200:
+    description: Libro actualizado
+  400:
+    description: Faltan datos
+  404:
+    description: Libro no encontrado
