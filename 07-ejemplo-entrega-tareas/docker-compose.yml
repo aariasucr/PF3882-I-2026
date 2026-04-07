@@ -1,0 +1,28 @@
+services:
+  usuarios:
+    build: usuarios/.
+    container_name: usuarios
+    ports:
+      - "9090:8000"
+    restart: always
+    hostname: usuarios
+    environment:
+      "LIBROS_SERVICE": http://libros:5000
+
+  libros:
+    build: libros/.
+    container_name: libros
+    ports:
+      - "5001:5000"
+    restart: always
+    hostname: libros
+    environment:
+      "AUTORES_SERVICE": http://autores:5000
+
+  autores:
+    build: autores/.
+    container_name: autores
+    ports:
+      - "5002:5000"
+    restart: always
+    hostname: autores
