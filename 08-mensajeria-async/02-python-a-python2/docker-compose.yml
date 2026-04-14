@@ -1,0 +1,43 @@
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # RabbitMQ messaging
+      - "15672:15672" # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    hostname: rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  publisher:
+    build: publisher/.
+    container_name: publisher
+    ports:
+      - "5000:5000"
+    restart: always
+    hostname: publisher
+    environment:
+      "RABBITMQ_HOST": "rabbitmq"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  subscriber:
+    build: subscriber/.
+    container_name: subscriber
+    ports:
+      - "5001:5000"
+    restart: always
+    hostname: subscriber
+    environment:
+      "RABBITMQ_HOST": "rabbitmq"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
