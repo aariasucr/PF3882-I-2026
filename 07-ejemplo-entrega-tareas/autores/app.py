@@ -36,7 +36,8 @@ class Autor:
 class Query:
     @strawberry.field
     def autores(self) -> list[Autor]:
-        app.logger.info("Retornando lista de autores con tamaño: %d", len(autores_data))
+        app.logger.info(
+            "Retornando lista de autores con tamaño: %d", len(autores_data))
         return [Autor(id=a["id"], nombre=a["nombre"]) for a in autores_data]
 
     @strawberry.field
@@ -47,6 +48,17 @@ class Query:
                 return Autor(id=a["id"], nombre=a["nombre"])
         app.logger.info("Autor con id %d NO encontrado", autor_id)
         return None
+
+    @strawberry.field
+    def autor_by_name(self, nombre: str) -> list[Autor]:
+        resultados = []
+        for a in autores_data:
+            if nombre in a["nombre"]:
+                app.logger.info("Autor con nombre %s encontrado", nombre)
+                resultados.append(Autor(id=a["id"], nombre=a["nombre"]))
+        if not resultados:
+            app.logger.info("Autor con nombre %s NO encontrado", nombre)
+        return resultados
 
 
 schema = strawberry.Schema(query=Query)
