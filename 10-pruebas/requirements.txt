@@ -1,0 +1,14 @@
+flask
+fastapi
+uvicorn
+strawberry-graphql[flask]
+sqlalchemy
+psycopg2-binary
+python-dotenv
+flasgger
+faker
+pytest
+httpx
+requests
+schemathesis
+pact-python
