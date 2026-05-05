@@ -1,7 +1,9 @@
 from typing import List, Optional
+
 import strawberry
-from strawberry.flask.views import GraphQLView
 from flask import Flask
+from strawberry.flask.views import GraphQLView
+
 from app.service import TaskListService, TaskService
 
 tasklist_service = TaskListService()

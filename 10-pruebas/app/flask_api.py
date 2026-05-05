@@ -1,5 +1,6 @@
-from flask import Flask, Blueprint, request, jsonify
 from flasgger import Swagger
+from flask import Blueprint, Flask, jsonify, request
+
 from app.service import TaskListService, TaskService
 
 tasklist_service = TaskListService()

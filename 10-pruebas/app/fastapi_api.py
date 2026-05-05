@@ -1,6 +1,8 @@
 from typing import Optional
-from fastapi import FastAPI, APIRouter, HTTPException
+
+from fastapi import APIRouter, FastAPI, HTTPException
 from pydantic import BaseModel
+
 from app.service import TaskListService, TaskService
 
 tasklist_service = TaskListService()

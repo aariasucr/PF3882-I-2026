@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session, joinedload
-from app.models import TaskList, Task, TaskStatus
+
+from app.models import Task, TaskList, TaskStatus
 
 
 class TaskListRepository:
