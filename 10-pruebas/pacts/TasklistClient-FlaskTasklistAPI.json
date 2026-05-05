@@ -1,0 +1,224 @@
+{
+  "consumer": {
+    "name": "TasklistClient"
+  },
+  "interactions": [
+    {
+      "description": "GET /flask/tasklists returns a list",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "at least one tasklist exists"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/flask/tasklists"
+      },
+      "response": {
+        "body": {
+          "content": [
+            {
+              "id": 1,
+              "name": "Shopping",
+              "tasks": []
+            }
+          ],
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "transport": "http",
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "GET /flask/tasklists/1 returns the tasklist",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "a tasklist with id 1 exists"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/flask/tasklists/1"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "id": 1,
+            "name": "Shopping",
+            "tasks": []
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "transport": "http",
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "GET /flask/tasklists/999 returns 404",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "no tasklist with id 999 exists"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/flask/tasklists/999"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "error": "not found"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.error": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 404
+      },
+      "transport": "http",
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "POST /flask/tasklists creates a new tasklist",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "any state"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "name": "Shopping"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/flask/tasklists"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "id": 1,
+            "name": "Shopping",
+            "tasks": []
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            }
+          }
+        },
+        "status": 201
+      },
+      "transport": "http",
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.5.4",
+      "mockserver": "2.2.1",
+      "models": "1.3.11"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "FlaskTasklistAPI"
+  }
+}

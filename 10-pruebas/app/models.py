@@ -17,7 +17,8 @@ class TaskList(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
-    tasks = relationship("Task", back_populates="tasklist", cascade="all, delete-orphan", lazy="select")
+    tasks = relationship("Task", back_populates="tasklist",
+                         cascade="all, delete-orphan", lazy="select")
 
     def to_dict(self):
         return {
@@ -32,9 +33,12 @@ class Task(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     description = Column(String, nullable=False)
-    status = Column(SAEnum(TaskStatus), nullable=False, default=TaskStatus.pending)
-    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    status = Column(SAEnum(TaskStatus), nullable=False,
+                    default=TaskStatus.pending)
+    created_at = Column(DateTime(timezone=True), nullable=False,
+                        default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(
+        timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     tasklist_id = Column(Integer, ForeignKey("tasklists.id"), nullable=False)
     tasklist = relationship("TaskList", back_populates="tasks")
 

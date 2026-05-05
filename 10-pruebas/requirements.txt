@@ -12,3 +12,14 @@ httpx
 requests
 schemathesis
 pact-python
+
+
+##### librerias para calidad de codigo y seguridad #####
+pylint
+flake8
+black
+isort
+mypy
+radon
+bandit
+pip-audit
