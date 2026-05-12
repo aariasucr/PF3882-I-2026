@@ -1,0 +1,87 @@
+services:
+  usuarios:
+    build: usuarios/.
+    container_name: usuarios
+    ports:
+      - "8000:8000"
+    restart: always
+    hostname: usuarios
+    environment:
+      "LIBROS_SERVICE": http://libros:5000
+      "DATABASE_URL": postgresql://monitoreo:monitoreo@db:5432/monitoreo
+
+  libros:
+    build: libros/.
+    container_name: libros
+    ports:
+      - "5001:5000"
+    restart: always
+    hostname: libros
+    environment:
+      "AUTORES_SERVICE": http://autores:5000
+      "DATABASE_URL": postgresql://monitoreo:monitoreo@db:5432/monitoreo
+
+  autores:
+    build: autores/.
+    container_name: autores
+    ports:
+      - "5002:5000"
+    restart: always
+    hostname: autores
+    environment:
+      "DATABASE_URL": postgresql://monitoreo:monitoreo@db:5432/monitoreo
+
+  autores-seed:
+    build: autores/.
+    container_name: autores-seed
+    command: python seed.py
+    environment:
+      DATABASE_URL: postgresql://monitoreo:monitoreo@db:5432/monitoreo
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  libros-seed:
+    build: libros/.
+    container_name: libros-seed
+    command: python seed.py
+    environment:
+      DATABASE_URL: postgresql://monitoreo:monitoreo@db:5432/monitoreo
+      AUTORES_SERVICE: http://autores:5000
+    depends_on:
+      db:
+        condition: service_healthy
+      autores-seed:
+        condition: service_completed_successfully
+    restart: "no"
+
+  usuarios-seed:
+    build: usuarios/.
+    container_name: usuarios-seed
+    command: python seed.py
+    environment:
+      DATABASE_URL: postgresql://monitoreo:monitoreo@db:5432/monitoreo
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: monitoreo
+      POSTGRES_PASSWORD: monitoreo
+      POSTGRES_DB: monitoreo
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U monitoreo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
