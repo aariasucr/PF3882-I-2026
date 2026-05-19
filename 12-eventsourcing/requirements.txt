@@ -1,0 +1,13 @@
+# API
+fastapi==0.115.5
+uvicorn[standard]==0.32.0
+
+# Base de datos
+asyncpg==0.30.0
+
+# Brokers
+aio-pika==9.4.3       # RabbitMQ
+redis[hiredis]==5.2.0  # Redis Streams
+
+# Modelos
+pydantic==2.9.2

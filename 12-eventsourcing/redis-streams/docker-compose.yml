@@ -1,0 +1,83 @@
+services:
+
+  # ── Infraestructura ──────────────────────────────────────────────────────────
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: es_redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes   # AOF = persistencia en disco
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: es_postgres_redis
+    environment:
+      POSTGRES_USER:     eventsource
+      POSTGRES_PASSWORD: eventsource
+      POSTGRES_DB:       orders_db
+    volumes:
+      - ./init-postgres.sh:/docker-entrypoint-initdb.d/init-postgres.sh
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"    # puerto distinto para no colisionar con el ejemplo RabbitMQ
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eventsource -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Microservicios ───────────────────────────────────────────────────────────
+
+  orders:
+    build: ./orders
+    container_name: es_orders_redis
+    ports:
+      - "8011:8000"    # Swagger UI: http://localhost:8011/docs
+    environment:
+      DATABASE_URL: postgresql://eventsource:eventsource@postgres/orders_db
+      REDIS_URL:    redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: on-failure
+
+  inventory:
+    build: ./inventory
+    container_name: es_inventory_redis
+    ports:
+      - "8012:8000"    # Swagger UI: http://localhost:8012/docs
+    environment:
+      DATABASE_URL: postgresql://eventsource:eventsource@postgres/inventory_db
+      REDIS_URL:    redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: on-failure
+
+  notifications:
+    build: ./notifications
+    container_name: es_notifications_redis
+    ports:
+      - "8013:8000"    # Swagger UI: http://localhost:8013/docs
+    environment:
+      DATABASE_URL: postgresql://eventsource:eventsource@postgres/notifications_db
+      REDIS_URL:    redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  postgres_data:
