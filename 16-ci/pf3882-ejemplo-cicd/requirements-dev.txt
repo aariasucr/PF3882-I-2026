@@ -1,0 +1,10 @@
+faker
+pytest
+pylint
+flake8
+isort
+mypy
+radon
+black
+pip-audit
+commitizen

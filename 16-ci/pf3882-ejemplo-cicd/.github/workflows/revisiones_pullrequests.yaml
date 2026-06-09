@@ -1,0 +1,60 @@
+name: Revisiones de pull requests
+
+on:
+  pull_request:
+
+permissions:
+  checks: write
+  contents: read
+
+jobs:
+  revisiones:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Ejecutar Pytest
+        run: PYTHONPATH=$(pwd) pytest *.py ./tests/ --junit-xml=junit.xml
+
+      - name: Publish Test Results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Pytest Results
+          path: junit.xml
+          reporter: java-junit
+
+      - name: Ejecutar Pylint
+        run: PYTHONPATH=$(pwd) pylint *.py ./app/
+
+      - name: Ejecutar isort
+        run: isort --check-only ./app/
+
+      - name: EjecutarRun Radon (Cyclomatic Complexity)
+        run: radon cc *.py -nc
+
+      - name: Ejecutar Flake8
+        run: flake8 *.py app/
+
+      - name: Ejecutar Black
+        run: black --check app/
+
+      - name: Ejecutar mypy
+        run: mypy app/
+
+      - name: Ejecutar pip-audit
+        run: pip-audit
+        continue-on-error: true

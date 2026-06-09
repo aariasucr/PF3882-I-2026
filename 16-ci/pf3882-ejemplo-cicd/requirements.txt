@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+strawberry-graphql[asgi]
+sqlalchemy
+psycopg2-binary
+python-dotenv
+httpx
+requests
+alembic

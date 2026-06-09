@@ -1,0 +1,27 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "2.0.0"
+tag_format = "$version"
+update_changelog_on_bump = true
+changelog_file = "CHANGELOG.md"
+bump_message = "bump: version $current_version → $new_version"
+
+[[tool.commitizen.allowed_patterns]]
+name = "type"
+pattern = "(feat|fix|docs|style|refactor|perf|test|chore|ci|build)"
+
+[[tool.commitizen.allowed_patterns]]
+name = "scope"
+pattern = "^[a-z]+"
+
+[tool.commitizen.allowed_commit_types]
+feat = "Feature"
+fix = "Bug fix"
+docs = "Documentation"
+style = "Code style"
+refactor = "Refactoring"
+perf = "Performance"
+test = "Test"
+chore = "Chore"
+ci = "CI/CD"
+build = "Build"
